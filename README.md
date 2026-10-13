@@ -86,7 +86,15 @@ Medidas aplicadas:
 | **Errores genéricos al cliente** | El detalle técnico se guarda en el log del servidor y no se expone. |
 | **`textContent` en el frontend** | Evita XSS al mostrar los resultados en el DOM. |
 
-Con esta versión, el texto `' OR '1'='1` se busca como una frase literal: ningún producto la contiene, por lo que devuelve **0 resultados**.
+Se repitió exactamente el mismo ataque contra la versión segura:
+
+```bash
+curl -s -G "http://localhost/buscador-seguro/api/buscador-seguro.php" --data-urlencode "q=' OR '1'='1"
+```
+
+![Mismo ataque contra la versión segura](docs/capturas/04-ataque-version-segura.png)
+
+Con esta versión, el texto `' OR '1'='1` se busca como una frase literal: ningún producto la contiene, por lo que la respuesta es `"total":0` y **0 resultados**. La inyección SQL quedó neutralizada.
 
 > Nota: buscar `or` o `1` sí devuelve productos, y es correcto. No es una inyección: son coincidencias normales del `LIKE` ("Monit**or**", "Gamer 7.**1**").
 
